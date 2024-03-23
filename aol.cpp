@@ -17,7 +17,7 @@ Node *createNode(){
     for(int i = 0; i < size; i++)
         newNode->next[i] = NULL;
 
-    newNode->data_end = 0;
+    newNode->data_end = 0; 
     return newNode;
 }
 
@@ -151,7 +151,7 @@ int main(){
                 puts("");
                 break;
             case 4:
-                printAll_menu();
+                // printAll_menu();
                 puts("");
                 break;
             default: 
