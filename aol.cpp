@@ -79,6 +79,22 @@ void searchWord_menu() {
     printf("Press enter to continue..."); getchar();
 }
 
+void viewPrefixWords(Node *root, const char *prefix, char *slang, int index){
+    if(!root) return;
+    int ix = 1;
+    if(root->data_end){
+        slang[index] = '\0';
+        printf("%d. %s", ix, slang);
+        ix++;
+    }
+    for(int i = 0; i < size; i++){
+        if(root->next[i]){
+            slang[index] = root->next[i]->alphabet;
+            viewPrefixWords(root->next[i], prefix, slang, index+1);
+        }
+    }
+}
+
 void inputSlang_menu() {
     int spaceCount = 0;
     int len;
@@ -119,6 +135,18 @@ void inputSlang_menu() {
     printf("Press enter to continue..."); getchar();
 }
 
+void searchPrefix_menu(){
+    char prefix[20];
+    printf("Input a prefix to be searched: ");
+    scanf("%[^\n]", prefix); getchar();
+    int len = strlen(prefix);
+
+    Node *curr = root;
+    int index = 0;
+    for(int i = 0; i < index; i++){
+    }
+}
+
 void showMenu() {
     puts("\t\tWelcome to Boogle");
     puts("1. Release a new slang word");
@@ -128,11 +156,13 @@ void showMenu() {
     puts("5. Exit");
 }
 
+void printAll_menu(){
+
+}
 
 int main() {
     // Initialize the root node
-    root = createNode();
-
+    // root = createNode();
     int choice = 0;
     do {
         showMenu();
@@ -146,10 +176,10 @@ int main() {
                 searchWord_menu();
                 break;
             case 3:
-                // viewPrefixWords();
+                searchPrefix_menu();
                 break;
             case 4:
-                // printAll_menu();
+                printAll_menu();
                 break;
             default: 
                 puts("Invalid option\n");
