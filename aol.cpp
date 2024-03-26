@@ -8,13 +8,13 @@ struct Node {
     char alphabet;
     char desc[500];
     int data_end;
-    struct Node *next[size];
+    struct Node *child[size];
 } *root = NULL;
 
 struct Node *createNode() { 
     struct Node *newNode = (struct Node*) malloc(sizeof(struct Node));
     for(int i = 0; i < size; i++)
-        newNode->next[i] = NULL;
+        newNode->child[i] = NULL;
 
     newNode->data_end = 0; 
     return newNode;
@@ -25,9 +25,9 @@ void insertNode(const char *key, const char *desc) {
     int len = strlen(key);
     for(int i = 0; i < len; i++) {
         int index = key[i] - 'a';
-        if(!curr->next[index])
-            curr->next[index] = createNode();
-        curr = curr->next[index];
+        if(!curr->child[index])
+            curr->child[index] = createNode();
+        curr = curr->child[index];
     }
     curr->data_end = 1;
     strcpy(curr->desc, desc);
@@ -38,9 +38,9 @@ char *searchFromTrie(struct Node *root, const char *key) {
     int len = strlen(key);
     for(int i = 0; i < len; i++) {
         int index = key[i] - 'a';
-        if(!curr->next[index])
+        if(!curr->child[index])
             return NULL;
-        curr = curr->next[index];
+        curr = curr->child[index];
     }
     if (curr && curr->data_end)
         return curr->desc;
@@ -81,16 +81,16 @@ void searchWord_menu() {
 
 void viewPrefixWords(Node *root, const char *prefix, char *slang, int index){
     if(!root) return;
-    int ix = 1;
+    int j = 1;
     if(root->data_end){
         slang[index] = '\0';
-        printf("%d. %s", ix, slang);
-        ix++;
+        printf("%d. %s", j, slang);
+        j++;
     }
     for(int i = 0; i < size; i++){
-        if(root->next[i]){
-            slang[index] = root->next[i]->alphabet;
-            viewPrefixWords(root->next[i], prefix, slang, index+1);
+        if(root->child[i]){
+            slang[index] = root->child[i]->alphabet;
+            viewPrefixWords(root->child[i], prefix, slang, index+1);
         }
     }
 }
@@ -156,8 +156,32 @@ void showMenu() {
     puts("5. Exit");
 }
 
-void printAll_menu(){
+void printNode(Node *root, char *slang, int height){
+    if(root == NULL){
+        puts("There are no words yet");
+        return;
+    }
 
+    int index = 1;
+    if(root->data_end == true){
+        slang[height] = '\0';
+        printf("%d. %s\n",index++, slang);
+    }
+    for(int i = 0; i < size; i++){
+        if(root->child[i]){
+            slang[height] = i + 'a';
+            printNode(root->child[i], slang, height+1);
+        }
+    }
+}
+
+void printAll_menu(){
+    puts("List of all slang words in the dictionary:");
+    char str[100];
+    printNode(root, str, 0);
+
+    puts("");
+    printf("Press enter to continue..."); getchar();
 }
 
 int main() {
