@@ -18,7 +18,7 @@ TrieNode* createNode(char ch) {
 
 void insertWord(TrieNode** root, const char* word) {
     if (*root == NULL) *root = createNode('*');
-
+    //abc
     TrieNode* current = *root;
     while (*word) {
         if (current->children[*word] == NULL) {
@@ -30,18 +30,18 @@ void insertWord(TrieNode** root, const char* word) {
     current->isWord = 1;
 }
 
-void printTrieContents(TrieNode* node, char* buffer, int depth) {
+void printTrieContents(TrieNode* node, char* temp, int height) {
     if (node == NULL) return;
-
-    buffer[depth] = node->ch;
-    if (node->isWord) {
-        buffer[depth + 1] = '\0';
-        printf("%s\n", buffer + 1);
+    //abc
+    temp[height] = node->ch;
+    if (node->isWord == 1) {
+        temp[height + 1] = '\0';
+        printf("%s\n", temp + 1);
     }
 
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < 26; i++) {
         if (node->children[i] != NULL) {
-            printTrieContents(node->children[i], buffer, depth + 1);
+            printTrieContents(node->children[i], temp, height + 1);
         }
     }
 }
@@ -51,6 +51,7 @@ void searchPrefix(TrieNode* root, const char* prefix) {
     int depth = 0;
     buffer[depth++]=*prefix;
     TrieNode* current = root;
+    //a
     while (*prefix) {
         if (current == NULL) return;
         current = current->children[*prefix];

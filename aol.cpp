@@ -47,18 +47,22 @@ Node *createNode(char alphabet){
 void insertNode(Node **root, const char *key, const char *desc) {
     if (*root == NULL) *root = createNode('-');
 
-    Node* curr = *root;
+    Node *curr = *root;
     while (*key) {
         int index = *key - 'a';
         if (!curr->child[index])  
             curr->child[index] = createNode(*key);
         curr = curr->child[index];
+        printf("%c", curr->alphabet);
         key++;
     }
+    puts("");
     
     if (exists(*root, key)) {
+        printf("%d", exists(*root, key));
         strcpy(curr->desc, desc);
     } else {
+        printf("%d", exists(*root, key));
         curr->data_end = 1;
         strcpy(curr->desc, desc);
     }
@@ -150,7 +154,6 @@ char *searchFromTrie(Node *root, const char *key) {
     return NULL;
 }
 
-//Punya sebas (pake ini kalo logika gw gagal, rip)
 int exists(Node* root, const char* word) {
     Node* curr = root;
     while (*word) {
