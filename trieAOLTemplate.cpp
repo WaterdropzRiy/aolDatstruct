@@ -9,7 +9,7 @@ typedef struct trieNode {
 } TrieNode;
 
 TrieNode* createNode(char ch) {
-    TrieNode* node = malloc(sizeof(TrieNode));
+    TrieNode* node = (TrieNode*)malloc(sizeof(TrieNode));
     node->ch = ch;
     node->isWord = 0;
     memset(node->children, 0, sizeof(node->children));

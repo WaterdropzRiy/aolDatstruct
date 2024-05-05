@@ -28,7 +28,7 @@ void insertNode(Node **root, const char *key) {
     Node* curr = *root;
     while (*key) {
         int index = *key - 'a';
-        if (!curr->child[index])  
+        if (!curr->child[index])
             curr->child[index] = createNode(*key);
         curr = curr->child[index];
         key++;
