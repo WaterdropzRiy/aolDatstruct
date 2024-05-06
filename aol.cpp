@@ -29,7 +29,7 @@ Node *createNode(char alphabet);
 void insertNode(const char *key, const char *desc);
 void inputSlang_menu();
 char *searchFromTrie(const char *key);
-int exists(Node *root, const char *word);
+int exists(const char *word);
 void searchWord_menu();
 void searchPrefix(const char *prefix, char *temp, int height);
 void searchPrefix_menu();
@@ -79,7 +79,7 @@ void insertNode(const char *key, const char *desc) {
         key++; 
     }
     
-    if (exists(root, temp)) { //Checks if the word alreadt exists or not
+    if (exists(temp)) { //Checks if the word alreadt exists or not
         strcpy(curr->desc, desc);
     } else {
         curr->data_end = 1;
@@ -103,7 +103,7 @@ void inputSlang_menu() {
         scanf("%[^\n]", inputSlang); getchar();
         len = strlen(inputSlang);
 
-        if(len < 2){
+        if(len < 2){ //This section checks the length
             printf(RED "\nInput must be more than 1 character and have no spaces\n" RESET);
             printf("Press enter to continue..."); getchar(); 
             system("cls");
@@ -111,14 +111,14 @@ void inputSlang_menu() {
             continue;
         }
 
-        for(int i = 0; i < len; i++){
+        for(int i = 0; i < len; i++){ //this section checks if there's space or not
             if(inputSlang[i] == ' '){
                 printf(RED "\nInput must be more than 1 character and have no spaces\n" RESET);
                 printf("Press enter to continue..."); getchar(); 
                 system("cls");
                 wordFlag = 1;
                 break;
-            } else if(islower(inputSlang[i])){
+            } else if(!islower(inputSlang[i])){ //this section checks if the input is in lowercase or not
                 wordFlag = 1;
                 printf(RED "\nInput must be in all lowercase\n" RESET);
                 printf("Press enter to continue..."); getchar(); 
@@ -128,18 +128,18 @@ void inputSlang_menu() {
         }
     } while(wordFlag);
 
-    if(exists(root, inputSlang)){
+    /* This part creates two different versions of entering the description. One for updating and one for adding. If the slang already exists, it'll print out the update description prompt.*/
+    if(exists(inputSlang)){ 
         system("cls");
         int isMoreThanTwo = 0;
-        do {
+        do { //checks if there's more than two words or not
             printf("Update the slang word description [Must be more than 2 words]: ");
             scanf("%[^\n]", inputDesc); getchar();
             len = strlen(inputDesc);
 
             for(int i = 0; i < len; i++){
-                if(inputDesc[i] == ' ' && i != len-1){
-                    isMoreThanTwo = 1;
-                    break;
+                if(inputDesc[i] == ' ' && i != len - 1){ //If the current iteration is a space and it's not empty next, it'll flag isMoreThanTwo and break out of the loop
+                    isMoreThanTwo = 1; break;
                 }
             }
             if(!isMoreThanTwo){
@@ -171,6 +171,7 @@ void inputSlang_menu() {
         } while(!isMoreThanTwo);
     }
     
+    //Inserts the inputted word and description into the trie
     insertNode(inputSlang, inputDesc);
     puts("");
     printf("Press enter to continue..."); getchar();    
@@ -191,18 +192,20 @@ char *searchFromTrie(const char *key) {
     return NULL;
 }
 
-int exists(struct Node* root, const char* word) {
-    struct Node* curr = root;
-    while (*word) {
-        int index = *word - 'a';
-        if (!curr || !curr->child[index]) 
-           return 0;
+int exists(const char* key) {
+    Node* curr = root;
+    while(*key) {
+        int index = *key - 'a';
+        if (!curr || !curr->child[index]) return 0;
         curr = curr->child[index];
-        word++;
+        key++;
     }
-    return curr != NULL && curr->data_end;
+    if((curr != NULL) && (curr->data_end)) return 1;
 }
 
+/*
+    This menu is for printing the prompt and validating the input of the word that the user wants to search for. First there's a do while loop to validate if the input is more than one character and doesn't have spaces, just like the add inputSlang function. Then it checks if the word exists in the trie or not
+*/
 void searchWord_menu() {
     int len;
     char searchSlang[100];
@@ -239,6 +242,7 @@ void searchWord_menu() {
 void searchPrefix(const char* prefix, char *temp, int height) {
     temp[height++] = *prefix;
     Node* curr = root;
+    int found = 0;
 
     while (*prefix) {
         if (curr == NULL) return;
@@ -251,7 +255,6 @@ void searchPrefix(const char* prefix, char *temp, int height) {
         temp[height] = '\0';
         // printf("%s\n", temp); 
     }
-    int found = 0;
     for (int i = 0; i < 26; i++) { 
         if (curr->child[i] != NULL) {
             found = 1;
@@ -267,6 +270,9 @@ void searchPrefix_menu(){
     scanf("%[^\n]", prefix); getchar();
     char temp[100];
     temp[0] = '\0';
+    if(exists(prefix)){ //This if is to fix a bug where we enter the same word as an existing word, that existing word won't show up
+        printf("%s\n", prefix);
+    }
     searchPrefix(prefix, temp, 0);
 
     puts("");

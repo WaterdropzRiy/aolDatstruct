@@ -92,10 +92,13 @@ void searchPrefix(Node* root, const char* prefix) {
 
 int main(){
     Node *root = NULL;
+    char temp[100];
     insertNode(&root,"apple");
     insertNode(&root,"banana");
 
-    searchPrefix(root, "");
+    // searchPrefix(root, "");
+    searchPrefix(root, "apple");
+    // printNode(root, temp, 0);
 
     // printf("%d\n", exists(root, "apple"));
 
